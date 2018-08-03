@@ -1,5 +1,6 @@
 from inspect import signature
 import importlib
+import json
 
 global_aliases = {}
 
@@ -7,9 +8,10 @@ global_aliases = {}
 def alias_information(name):
     if name in global_aliases:
         print("Alias Name: ", name)
+        print("Total number of possible parameters for this alias: ", global_aliases[name][1])
         print("Alias Functions: ", end='\n')
         for index, item in enumerate(global_aliases[name][0]):
-            print(index, " Function: ", item, " #, of Parameters: ", global_aliases[name][1][index])
+            print(index, " Function: ", item, ", # of Parameters: ", global_aliases[name][2][index])
     else:
         print("There is no alias by that name...!")
 
@@ -48,6 +50,7 @@ def call_alias(name, data_storage=None):
 
 
 def create_alias(name, functions):
+    global global_aliases
     if name not in global_aliases:
         if isinstance(functions, (list,)):
             list_of_parameters = list()
@@ -59,10 +62,10 @@ def create_alias(name, functions):
                 sig = signature(func)
                 list_of_parameters.append(len(sig.parameters))
                 number_of_parameters += len(sig.parameters)
-            global_aliases[name] = (functions, list_of_parameters)
+            global_aliases[name] = [functions, number_of_parameters, list_of_parameters]
         else:
             sig = signature(functions)
-            global_aliases[name] = (functions, len(sig.parameters), len(sig.parameters))
+            global_aliases[name] = [functions, len(sig.parameters), len(sig.parameters)]
     else:
         print("There is an alias by that name already...!")
 
@@ -76,8 +79,12 @@ def delete_alias(name):
         return 0
 
 
-def load_aliases(file_path):
-    pass
+def load_aliases(file_name):
+    global global_aliases
+    with open(file_name, 'r') as fjson:
+        global_aliases = json.load(fjson)
+        
 
-def save_aliases():
-    pass
+def save_aliases(file_name):
+    with open(file_name, 'w') as fjson:
+        json.dump(global_aliases, fjson)

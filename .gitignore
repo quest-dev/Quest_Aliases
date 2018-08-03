@@ -1,0 +1,19 @@
+# If you are having git ignore file issuses, then do the following.
+# git rm -r --cached .
+# git add .
+# git commit -m "fixed untracked files"
+# git push
+
+## Ignore Mac OS Stuff
+.DS_Store
+
+## Python Stuff
+__pycache__
+.pyc
+.ipynb_checkpoints
+
+## Random
+.cache/
+.idea/*
+.egg/*
+.egg-info/
